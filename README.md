@@ -4,6 +4,7 @@ REST API & mobile client with basic auth behaviour
 
 DRF Server based on [Mark Winterbottom's Udemy course](https://www.udemy.com/django-python)
 
+
 ## Server
 
 ### Requirements
@@ -12,7 +13,7 @@ DRF Server based on [Mark Winterbottom's Udemy course](https://www.udemy.com/dja
 
 ### Setting up Vagrant box (on the host machine):
 ```
-$ vagrant init     # creates a config file
+$ vagrant init     # creates a config file if one doesn't exist
 $ vagrant up
 $ vagrant ssh
 $ vagrant halt
@@ -51,5 +52,12 @@ $ python manage.py createsuperuser
 $ python manage.py runserver 0.0.0.0:8080 # listen on all IP Addresses
 ```
 
+
 ## Client
 TODO
+
+
+## TODO
+* Add server unit tests
+* Client
+* PostgreSQL

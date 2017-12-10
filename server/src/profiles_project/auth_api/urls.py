@@ -5,7 +5,8 @@ from rest_framework.routers import DefaultRouter
 from . import views
 
 router = DefaultRouter()
-router.register('feed', views.UserProfileFeedViewSet)
+router.register('profile', views.UserProfileViewSet)  # infers base_name from model via serializer
+router.register('login', views.LoginViewSet, base_name='login')
 
 urlpatterns = [
     url(r'', include(router.urls))
