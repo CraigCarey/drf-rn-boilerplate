@@ -16,7 +16,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
         user = models.UserProfile(
             email=validated_data['email'],
-            name = validated_data['name']
+            name=validated_data['name']
         )
 
         # encrypt the password so it's stored as a hash

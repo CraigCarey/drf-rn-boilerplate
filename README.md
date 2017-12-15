@@ -25,23 +25,21 @@ Files in the same directory as the Vagrantfile are synced to `/vagrant/`
 
 ### Setting up a virtual environment (on the Vagrant box):
 ```
-$ mkvirtualenv profiles_api --python=python3
+$ mkvirtualenv drf-rn-boilerplate --python=python3
 $ deactivate
-$ workon profiles_api
+$ workon drf-rn-boilerplate
+```
+
+### Setting up a virtual environment (on your local machine):
+```
+$ python3 -m venv drf-rn-boilerplate
+$ source drf-rn-boilerplate/bin/activate
+$ deactivate
 ```
 
 ### Install requirements
 ```
-$ pip install django==1.11
-$ pip install djangorestframework==3.6.2
-```
-
-### Start Django project
-```
-$ mkdir /vagrant/src/ && cd /vagrant/src/
-$ django-admin.py startproject profiles_project
-$ cd profiles_project
-$ python manage.py startapp profiles_api
+$ pip install -r requirements.txt
 ```
 
 ### Start Django Development Server
@@ -49,8 +47,23 @@ $ python manage.py startapp profiles_api
 $ python manage.py makemigrations
 $ python manage.py migrate
 $ python manage.py createsuperuser
+$ python manage.py test
 $ python manage.py runserver 0.0.0.0:8080 # listen on all IP Addresses
 ```
+
+### API Endpoints
+
+#### Users
+
+* **/api/users/** (User registration endpoint)
+* **/api/users/login/** (User login endpoint)
+* **/api/users/logout/** (User logout endpoint)
+
+
+#### Todos
+
+* **/api/todos/** (Todo create and list endpoint)
+* **/api/todos/{todo-id}/** (Todo retrieve, update and destroy endpoint)
 
 
 ## Client
@@ -58,6 +71,7 @@ TODO
 
 
 ## TODO
-* Add server unit tests
+* Upgrade to Django 2.0
 * Client
 * PostgreSQL
+* https
