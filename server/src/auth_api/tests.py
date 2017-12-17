@@ -3,7 +3,7 @@ from rest_framework.test import APIRequestFactory, force_authenticate
 from rest_framework.authtoken.models import Token
 from rest_framework import status
 from .models import UserProfile
-from .views import UserProfileViewSet, LoginViewSet
+from .views import UserProfileViewSet, LoginViewSet, LogoutViewSet
 
 
 class UserProfileTests(TestCase):
@@ -138,8 +138,8 @@ class UserProfileTests(TestCase):
             'password': 'Wr0n6Pass'
         }
         request = self.factory.post('', user_credentials, format='json')
-        user_post_view = LoginViewSet.as_view({'post': 'create'})
-        response = user_post_view(request)
+        login_post_view = LoginViewSet.as_view({'post': 'create'})
+        response = login_post_view(request)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_login_user_invalid_user(self):
@@ -151,8 +151,8 @@ class UserProfileTests(TestCase):
             'password': self.user1.email
         }
         request = self.factory.post('', user_credentials, format='json')
-        user_post_view = LoginViewSet.as_view({'post': 'create'})
-        response = user_post_view(request)
+        login_post_view = LoginViewSet.as_view({'post': 'create'})
+        response = login_post_view(request)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_login_user(self):
@@ -164,8 +164,31 @@ class UserProfileTests(TestCase):
             'password': self.password
         }
         request = self.factory.post('', user_credentials, format='json')
-        user_post_view = LoginViewSet.as_view({'post': 'create'})
-        response = user_post_view(request)
+        login_post_view = LoginViewSet.as_view({'post': 'create'})
+        response = login_post_view(request)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         user_token = Token.objects.get(user=self.user1.pk)
         self.assertEquals(str(user_token), response.data['token'])
+
+    def test_logout_user(self):
+        """
+        Posting a valid token to the logout url deletes it from the server
+        """
+        user_credentials = {
+            'username': self.user1.email,
+            'password': self.password
+        }
+        request = self.factory.post('', user_credentials, format='json')
+        login_post_view = LoginViewSet.as_view({'post': 'create'})
+        response = login_post_view(request)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        user_token = Token.objects.get(user=self.user1.pk)
+        self.assertEquals(str(user_token), response.data['token'])
+
+        request = self.factory.post('', {}, HTTP_AUTHORIZATION='Token {}'.format(user_token))
+        logout_post_view = LogoutViewSet.as_view({'post': 'create'})
+        response = logout_post_view(request)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        with self.assertRaises(Token.DoesNotExist):
+            Token.objects.get(user=self.user1.pk)
