@@ -5,31 +5,37 @@ from django.contrib.auth.models import PermissionsMixin
 
 class UserProfileManager(BaseUserManager):
     """
-    Class required by Django for managing our users from the management command.
+    Class required by Django for managing our users from the management command
     """
 
     def create_user(self, email, name, password=None):
-        """Creates a new user with the given details."""
+        """
+        Creates a new user with the given details
+        """
 
         # Check that the user provided an email
         if not email:
             raise ValueError('Users must have an email address.')
 
+        if not password or len(password) < 8:
+            raise ValueError('Users must have a password at least 8 characters long.')
+
         # Create a new user object.
         user = self.model(
             email=self.normalize_email(email),
-            name=name,
+            name=name
         )
 
-        # Set the users password. We use this to create a password
-        # hash instead of storing it in clear text
+        # Create a password hash instead of storing it in clear text
         user.set_password(password)
         user.save(using=self._db)
 
         return user
 
     def create_superuser(self, email, name, password):
-        """Creates and saves a new superuser with given details."""
+        """
+        Creates and saves a new superuser with given details
+        """
 
         # Create a new user with the function we created above
         user = self.create_user(
