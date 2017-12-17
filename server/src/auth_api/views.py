@@ -11,6 +11,7 @@ from . import permissions
 
 class UserProfileViewSet(viewsets.ModelViewSet):
     """Handles creating, reading and updating profiles"""
+    # TODO: remove read
 
     serializer_class = serializers.UserProfileSerializer
     queryset = models.UserProfile.objects.all()

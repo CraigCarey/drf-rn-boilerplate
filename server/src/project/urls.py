@@ -17,8 +17,13 @@ from django.conf.urls import url
 from django.conf.urls import include
 from django.contrib import admin
 
+
+api_urls = [
+    url(r'^auth/', include('auth_api.urls')),
+    url(r'^todos/', include('todos_api.urls')),
+]
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^auth/', include('auth_api.urls')),
-    url(r'^profiles/', include('profiles_api.urls')),
+    url(r'^api/', include(api_urls)),
 ]
