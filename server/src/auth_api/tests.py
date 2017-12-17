@@ -1,5 +1,5 @@
 from django.test import TestCase
-from rest_framework.test import APIRequestFactory
+from rest_framework.test import APIRequestFactory, force_authenticate
 from rest_framework import status
 from .models import UserProfile
 from .views import UserProfileViewSet
@@ -20,17 +20,26 @@ class UserProfileTests(TestCase):
     def tearDown(self):
         self.user1.delete()
 
+    def test_get_all_users(self):
+        """
+        Get all users fails
+        """
+        request = self.factory.get('')
+        user_get_view = UserProfileViewSet.as_view({'get': 'list'})
+        response = user_get_view(request)
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
     def test_get_user(self):
         """
-        TODO: shouldn't be able to get users
+        Get user fails for anyone including owner
         """
         request = self.factory.get('')
         user_get_view = UserProfileViewSet.as_view({'get': 'retrieve'})
         response = user_get_view(request, pk=self.user1.pk)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['id'], self.user1.pk)
-        self.assertEqual(response.data['email'], self.user1.email)
-        self.assertEqual(response.data['name'], self.user1.name)
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+        force_authenticate(request, user=self.user1)
+        response = user_get_view(request, pk=self.user1.pk)
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
     def test_create_user(self):
         """
@@ -46,12 +55,9 @@ class UserProfileTests(TestCase):
         response = user_post_view(request)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         new_user_pk = response.data['id']
-
-        request = self.factory.get('')
-        user_get_view = UserProfileViewSet.as_view({'get': 'retrieve'})
-        response = user_get_view(request, pk=new_user_pk)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['name'], new_user['name'])
+        new_user_db = UserProfile.objects.get(pk=new_user_pk)
+        self.assertEquals(new_user_db.email, new_user['email'])
+        self.assertEquals(new_user_db.name, new_user['name'])
 
     def test_create_user_no_password(self):
         """
@@ -115,7 +121,6 @@ class UserProfileTests(TestCase):
             'email': "test7test.com",
             'name': "test7",
             'password': "S3cr3tP@55"
-
         }
         request = self.factory.post('', new_user, format='json')
         user_post_view = UserProfileViewSet.as_view({'post': 'create'})
