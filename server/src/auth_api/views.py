@@ -8,7 +8,9 @@ from . import models
 
 
 class UserProfileViewSet(viewsets.ModelViewSet):
-    """Handles creating, reading and updating profiles"""
+    """
+    Handles creating, reading and updating profiles
+    """
 
     serializer_class = serializers.UserProfileSerializer
     queryset = models.UserProfile.objects.all()
@@ -17,12 +19,16 @@ class UserProfileViewSet(viewsets.ModelViewSet):
 
 
 class LoginViewSet(viewsets.ViewSet):
-    """Checks email and password and return an auth token"""
+    """
+    Checks email and password and return an auth token
+    """
 
     serializer_class = AuthTokenSerializer
 
     def create(self, request):
-        """Use the ObtainAuthToken APIView to validate and create a token"""
+        """
+        Use the ObtainAuthToken APIView to validate and create a token
+        """
 
         return ObtainAuthToken().post(request)
 

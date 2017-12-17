@@ -1,8 +1,9 @@
 from django.test import TestCase
 from rest_framework.test import APIRequestFactory, force_authenticate
+from rest_framework.authtoken.models import Token
 from rest_framework import status
 from .models import UserProfile
-from .views import UserProfileViewSet
+from .views import UserProfileViewSet, LoginViewSet
 
 
 class UserProfileTests(TestCase):
@@ -12,10 +13,11 @@ class UserProfileTests(TestCase):
         Define the test client and other test variables
         """
         self.factory = APIRequestFactory()
+        self.password = "S3cr3tP@55"
         self.user1 = UserProfile.objects.create_user(
             email="test1@test.com",
             name="test1",
-            password="S3cr3tP@55")
+            password=self.password)
 
     def tearDown(self):
         self.user1.delete()
@@ -48,7 +50,7 @@ class UserProfileTests(TestCase):
         new_user = {
             'email': "test2@test.com",
             'name': "test2",
-            'password': "S3cr3tP@55"
+            'password': self.password
         }
         request = self.factory.post('', new_user, format='json')
         user_post_view = UserProfileViewSet.as_view({'post': 'create'})
@@ -106,7 +108,7 @@ class UserProfileTests(TestCase):
         """
         new_user = {
             'name': "test6",
-            'password': "S3cr3tP@55"
+            'password': self.password
         }
         request = self.factory.post('', new_user, format='json')
         user_post_view = UserProfileViewSet.as_view({'post': 'create'})
@@ -120,9 +122,50 @@ class UserProfileTests(TestCase):
         new_user = {
             'email': "test7test.com",
             'name': "test7",
-            'password': "S3cr3tP@55"
+            'password': self.password
         }
         request = self.factory.post('', new_user, format='json')
         user_post_view = UserProfileViewSet.as_view({'post': 'create'})
         response = user_post_view(request)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_login_user_wrong_password(self):
+        """
+        Login fails when password is incorrect
+        """
+        user_credentials = {
+            'username': self.user1.email,
+            'password': 'Wr0n6Pass'
+        }
+        request = self.factory.post('', user_credentials, format='json')
+        user_post_view = LoginViewSet.as_view({'post': 'create'})
+        response = user_post_view(request)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_login_user_invalid_user(self):
+        """
+        Login fails when email isn't registered
+        """
+        user_credentials = {
+            'username': "testwrong@fail.com",
+            'password': self.user1.email
+        }
+        request = self.factory.post('', user_credentials, format='json')
+        user_post_view = LoginViewSet.as_view({'post': 'create'})
+        response = user_post_view(request)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_login_user(self):
+        """
+        Login returns a valid Token when username and password are correct
+        """
+        user_credentials = {
+            'username': self.user1.email,
+            'password': self.password
+        }
+        request = self.factory.post('', user_credentials, format='json')
+        user_post_view = LoginViewSet.as_view({'post': 'create'})
+        response = user_post_view(request)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        user_token = Token.objects.get(user=self.user1.pk)
+        self.assertEquals(str(user_token), response.data['token'])

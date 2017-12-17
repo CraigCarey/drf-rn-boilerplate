@@ -28,9 +28,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
             name=validated_data['name']
         )
 
-        # encrypt the password so it's stored as a hash
+        # encrypt the password and store as a hash
         user.set_password(validated_data['password'])
-
         user.save()
-
         return user
