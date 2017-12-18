@@ -80,12 +80,31 @@ class TodosApiTests(TestCase):
         response = todo_post_view(request)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_owner_update_todo(self):
+    def test_owner_put_todo(self):
         """
         Only the owner of a todo can update it
         """
         test_data = {
-            'todo_text': "New test todo text"
+            'todo_text': "New test todo text PUT"
+        }
+        request = self.factory.put('', test_data)
+        todo_put_view = TodoViewSet.as_view({'put': 'update'})
+
+        response = todo_put_view(request, pk=self.todo1.pk)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+        force_authenticate(request, user=self.user1)
+        response = todo_put_view(request, pk=self.todo1.pk)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.todo1 = TodoItem.objects.get(pk=self.todo1.pk)
+        self.assertEqual(self.todo1.todo_text, test_data['todo_text'])
+
+    def test_owner_patch_todo(self):
+        """
+        Only the owner of a todo can partially update it
+        """
+        test_data = {
+            'todo_text': "New test todo text PATCH"
         }
         request = self.factory.patch('', test_data)
         todo_patch_view = TodoViewSet.as_view({'patch': 'partial_update'})
@@ -98,3 +117,27 @@ class TodosApiTests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.todo1 = TodoItem.objects.get(pk=self.todo1.pk)
         self.assertEqual(self.todo1.todo_text, test_data['todo_text'])
+
+    def test_owner_delete_todo(self):
+        """
+        Only the owner of a todo can delete it
+        """
+        request = self.factory.delete('')
+        todo_delete_view = TodoViewSet.as_view({'delete': 'destroy'})
+
+        response = todo_delete_view(request, pk=self.todo1.pk)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+        force_authenticate(request, user=self.user1)
+        response = todo_delete_view(request, pk=self.todo1.pk)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        with self.assertRaises(TodoItem.DoesNotExist):
+            TodoItem.objects.get(pk=self.todo1.pk)
+
+    def test_get(self):
+        request = self.factory.get('')
+        todo_get_view = TodoViewSet.as_view({'get': 'retrieve'})
+        response = todo_get_view(request, pk=self.todo1.pk)
+        self.assertEquals(response.status_code, status.HTTP_200_OK)
+        self.assertEquals(response.data['todo_text'], self.todo1.todo_text)
