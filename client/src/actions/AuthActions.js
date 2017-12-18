@@ -34,35 +34,30 @@ export const password2Changed = (text) => {
 
 // works asynchronously using redux-thunk
 // manually dispatches an action to the store when call returns
-export const loginUser = ({ username, password }) => {
+export const loginUser = ({ email, password }) => {
 
     return (dispatch) => {
         dispatch({ type: LOGIN_USER_START });
 
-        fetch('http://127.0.0.1:8080/api/users/login/', {
+        fetch("http://localhost:8080/api/auth/login/", {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                username: username,
+                username: email,
                 password: password
-            }),
+            })
         })
-        .then(user => loginUserSuccess(dispatch, user))
+        .then(response => {
+            console.log(response);
+            loginUserSuccess(dispatch, null);
+        })
         .catch((error) => {
             console.log(error);
             loginUserFail(dispatch);
         });
-
-        // TODO
-        // firebase.auth().signInWithEmailAndPassword(email, password)
-        //     .then(user => loginUserSuccess(dispatch, user))
-        //     .catch((error) => {
-        //         console.log(error);
-        //         loginUserFail(dispatch);
-        //     })
     };
 };
 

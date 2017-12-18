@@ -20,9 +20,9 @@ class LoginForm extends Component {
     }
 
     onLoginButtonPress() {
-        const { username, password } = this.props;
+        const { email, password } = this.props;
 
-        this.props.loginUser({username, password});
+        this.props.loginUser({email, password});
     }
 
     renderButton() {
@@ -108,9 +108,9 @@ const styles={
 
 const mapStateToProps = state => {
 
-    const { username, email, password, error, loading } = state.auth;
+    const { email, password, error, loading } = state.auth;
 
-    return { username, email, password, error, loading };
+    return { email, password, error, loading };
 };
 
 export default connect(mapStateToProps, {
