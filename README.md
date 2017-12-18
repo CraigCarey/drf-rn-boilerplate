@@ -2,8 +2,6 @@
 
 REST API & mobile client with basic auth behaviour
 
-DRF Server based on [Mark Winterbottom's Udemy course](https://www.udemy.com/django-python)
-
 
 ## Server
 
@@ -55,9 +53,9 @@ $ python manage.py runserver 0.0.0.0:8080 # listen on all IP Addresses
 
 #### Users
 
-* **/api/users/** (User registration endpoint)
-* **/api/users/login/** (User login endpoint)
-* **/api/users/logout/** (User logout endpoint)
+* **/api/auth/profile/** (User registration endpoint)
+* **/api/auth/login/** (User login endpoint)
+* **/api/auth/logout/** (User logout endpoint)
 
 
 #### Todos
