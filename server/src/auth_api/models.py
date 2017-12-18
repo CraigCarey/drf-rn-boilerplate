@@ -7,12 +7,10 @@ class UserProfileManager(BaseUserManager):
     """
     Class required by Django for managing our users from the management command
     """
-
     def create_user(self, email, name, password=None):
         """
         Creates a new user with the given details
         """
-
         # Check that the user provided an email
         if not email:
             raise ValueError('Users must have an email address.')
@@ -36,7 +34,6 @@ class UserProfileManager(BaseUserManager):
         """
         Creates and saves a new superuser with given details
         """
-
         # Create a new user with the function we created above
         user = self.create_user(
             email,
@@ -53,8 +50,9 @@ class UserProfileManager(BaseUserManager):
 
 
 class UserProfile(AbstractBaseUser, PermissionsMixin):
-    """A user profile in our system."""
-
+    """
+    A user profile in our system
+    """
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=True)
@@ -67,19 +65,18 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
 
     def get_full_name(self):
         """
-        Required function so Django knows what to use as the users full name.
+        Required function so Django knows what to use as the users full name
         """
-
         self.name
 
     def get_short_name(self):
         """
-        Required function so Django knows what to use as the users short name.
+        Required function so Django knows what to use as the users short name
         """
-
         self.name
 
     def __str__(self):
-        """What to show when we output an object as a string."""
-
+        """
+        What to show when we output an object as a string
+        """
         return self.email

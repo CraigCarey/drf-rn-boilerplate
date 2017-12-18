@@ -4,7 +4,9 @@ from . import models
 
 
 class TodoItemSerializer(serializers.ModelSerializer):
-    """Serializer for Todo Items"""
+    """
+    Serializer for Todo Items
+    """
 
     class Meta:
         model = models.TodoItem

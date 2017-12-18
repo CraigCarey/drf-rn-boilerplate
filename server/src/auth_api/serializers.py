@@ -8,7 +8,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
     """
     A serializer for our user profile object
     """
-
     class Meta:
         model = models.UserProfile
         fields = ('id', 'email', 'name', 'password')
@@ -22,7 +21,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
         """
         Create and return a new user
         """
-
         user = models.UserProfile(
             email=validated_data['email'],
             name=validated_data['name']

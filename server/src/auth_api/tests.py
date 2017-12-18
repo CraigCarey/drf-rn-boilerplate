@@ -47,29 +47,28 @@ class UserProfileTests(TestCase):
         """
         Can register new user
         """
-        new_user = {
+        test_data = {
             'email': "test2@test.com",
             'name': "test2",
             'password': self.password
         }
-        request = self.factory.post('', new_user, format='json')
+        request = self.factory.post('', test_data, format='json')
         user_post_view = UserProfileViewSet.as_view({'post': 'create'})
         response = user_post_view(request)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        new_user_pk = response.data['id']
-        new_user_db = UserProfile.objects.get(pk=new_user_pk)
-        self.assertEquals(new_user_db.email, new_user['email'])
-        self.assertEquals(new_user_db.name, new_user['name'])
+        new_user = UserProfile.objects.get(pk=response.data['id'])
+        self.assertEquals(new_user.email, test_data['email'])
+        self.assertEquals(new_user.name, test_data['name'])
 
     def test_create_user_no_password(self):
         """
         Register user fails when no password provided
         """
-        new_user = {
+        test_data = {
             'email': "test3@test.com",
             'name': "test3"
         }
-        request = self.factory.post('', new_user, format='json')
+        request = self.factory.post('', test_data, format='json')
         user_post_view = UserProfileViewSet.as_view({'post': 'create'})
         response = user_post_view(request)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -78,12 +77,12 @@ class UserProfileTests(TestCase):
         """
         Register user fails when password too short
         """
-        new_user = {
+        test_data = {
             'email': "test4@test.com",
             'name': "test4",
             'password': "123"
         }
-        request = self.factory.post('', new_user, format='json')
+        request = self.factory.post('', test_data, format='json')
         user_post_view = UserProfileViewSet.as_view({'post': 'create'})
         response = user_post_view(request)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -92,12 +91,12 @@ class UserProfileTests(TestCase):
         """
         Register user fails when password too common
         """
-        new_user = {
+        test_data = {
             'email': "test5@test.com",
             'name': "test5",
             'password': "password"
         }
-        request = self.factory.post('', new_user, format='json')
+        request = self.factory.post('', test_data, format='json')
         user_post_view = UserProfileViewSet.as_view({'post': 'create'})
         response = user_post_view(request)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -106,11 +105,11 @@ class UserProfileTests(TestCase):
         """
         Register user fails when no email provided
         """
-        new_user = {
+        test_data = {
             'name': "test6",
             'password': self.password
         }
-        request = self.factory.post('', new_user, format='json')
+        request = self.factory.post('', test_data, format='json')
         user_post_view = UserProfileViewSet.as_view({'post': 'create'})
         response = user_post_view(request)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -119,12 +118,12 @@ class UserProfileTests(TestCase):
         """
         Register user fails when malformed email provided
         """
-        new_user = {
+        test_data = {
             'email': "test7test.com",
             'name': "test7",
             'password': self.password
         }
-        request = self.factory.post('', new_user, format='json')
+        request = self.factory.post('', test_data, format='json')
         user_post_view = UserProfileViewSet.as_view({'post': 'create'})
         response = user_post_view(request)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -133,11 +132,11 @@ class UserProfileTests(TestCase):
         """
         Login fails when password is incorrect
         """
-        user_credentials = {
+        test_data = {
             'username': self.user1.email,
             'password': 'Wr0n6Pass'
         }
-        request = self.factory.post('', user_credentials, format='json')
+        request = self.factory.post('', test_data, format='json')
         login_post_view = LoginViewSet.as_view({'post': 'create'})
         response = login_post_view(request)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -146,11 +145,11 @@ class UserProfileTests(TestCase):
         """
         Login fails when email isn't registered
         """
-        user_credentials = {
+        test_data = {
             'username': "testwrong@fail.com",
-            'password': self.user1.email
+            'password': self.password
         }
-        request = self.factory.post('', user_credentials, format='json')
+        request = self.factory.post('', test_data, format='json')
         login_post_view = LoginViewSet.as_view({'post': 'create'})
         response = login_post_view(request)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -159,11 +158,11 @@ class UserProfileTests(TestCase):
         """
         Login returns a valid Token when username and password are correct
         """
-        user_credentials = {
+        test_data = {
             'username': self.user1.email,
             'password': self.password
         }
-        request = self.factory.post('', user_credentials, format='json')
+        request = self.factory.post('', test_data, format='json')
         login_post_view = LoginViewSet.as_view({'post': 'create'})
         response = login_post_view(request)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -174,11 +173,11 @@ class UserProfileTests(TestCase):
         """
         Posting a valid token to the logout url deletes it from the server
         """
-        user_credentials = {
+        test_data = {
             'username': self.user1.email,
             'password': self.password
         }
-        request = self.factory.post('', user_credentials, format='json')
+        request = self.factory.post('', test_data, format='json')
         login_post_view = LoginViewSet.as_view({'post': 'create'})
         response = login_post_view(request)
         self.assertEqual(response.status_code, status.HTTP_200_OK)

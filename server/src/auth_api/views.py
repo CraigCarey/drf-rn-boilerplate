@@ -14,7 +14,6 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     """
     Handles creating, reading and updating profiles
     """
-
     serializer_class = serializers.UserProfileSerializer
     queryset = models.UserProfile.objects.all()
     authentication_classes = (TokenAuthentication,)
@@ -25,14 +24,12 @@ class LoginViewSet(viewsets.ViewSet):
     """
     Checks email and password and return an auth token
     """
-
     serializer_class = AuthTokenSerializer
 
     def create(self, request):
         """
         Use the ObtainAuthToken APIView to validate and create a token
         """
-
         return ObtainAuthToken().post(request)
 
 
@@ -41,7 +38,6 @@ class LogoutViewSet(viewsets.ViewSet):
     Logs the current user out EVERYWHERE by deleting their token on the server
     You may not wish to use this, and instead simply delete the client token
     """
-
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
@@ -49,6 +45,5 @@ class LogoutViewSet(viewsets.ViewSet):
         """
         Remove the current authenticated users token
         """
-
         Token.objects.filter(user=request.user).delete()
         return Response({'success': True})
