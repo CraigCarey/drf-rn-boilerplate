@@ -65,11 +65,20 @@ $ python manage.py runserver 0.0.0.0:8080 # listen on all IP Addresses
 
 
 ## Client
-TODO
-
+```
+$ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+$ brew install node
+$ brew install watchman
+$ cd client
+$ npm install
+$ react-native run-ios
+```
 
 ## TODO
-* Upgrade to Django 2.0
+* Server
+    * Upgrade to Django 2.0
+    * Password reset
+    * PostgreSQL
+    * HTTPS
 * Client
-* PostgreSQL
-* https
+    * Nav menu
