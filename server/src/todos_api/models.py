@@ -10,4 +10,4 @@ class TodoItem(models.Model):
 
     def __str__(self):
 
-        return self.status_text
+        return self.todo_text
