@@ -1,7 +1,6 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
-from django.core.urlresolvers import reverse, resolve
-from rest_framework.test import APIRequestFactory, force_authenticate, APIClient
+from rest_framework.test import APIRequestFactory, force_authenticate
 from rest_framework import status
 from .views import TodoViewSet
 from .models import TodoItem
@@ -83,17 +82,19 @@ class TodosApiTests(TestCase):
 
     def test_owner_update_todo(self):
         """
-        The owner of a todo can update it
+        Only the owner of a todo can update it
         """
         test_data = {
-            'todo_text': "Test todo 2"
+            'todo_text': "New test todo text"
         }
+        request = self.factory.patch('', test_data)
+        todo_patch_view = TodoViewSet.as_view({'patch': 'partial_update'})
 
-        url = reverse('todos-detail', kwargs={'pk': self.todo1.pk})
-        request = self.factory.patch(url, test_data)
+        response = todo_patch_view(request, pk=self.todo1.pk)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
         force_authenticate(request, user=self.user1)
-        todo_post_view = TodoViewSet.as_view({'patch': 'partial_update'})
-        response = todo_post_view(request, pk=self.todo1.pk)
+        response = todo_patch_view(request, pk=self.todo1.pk)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.todo1 = TodoItem.objects.get(pk=self.todo1.pk)
         self.assertEqual(self.todo1.todo_text, test_data['todo_text'])
