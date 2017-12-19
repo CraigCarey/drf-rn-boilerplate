@@ -11,6 +11,10 @@ import {
     CLEAR_AUTH_ERRORS
 } from './types';
 
+import ApiUtils from './ApiUtils'
+
+const ServerAddress = "http://localhost:8080";
+
 export const emailChanged = (text) => {
     return {
         type: EMAIL_CHANGED,
@@ -39,7 +43,7 @@ export const loginUser = ({ email, password }) => {
     return (dispatch) => {
         dispatch({ type: LOGIN_USER_START });
 
-        fetch("http://localhost:8080/api/auth/login/", {
+        fetch(`${ServerAddress}/api/auth/login/`, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -50,11 +54,12 @@ export const loginUser = ({ email, password }) => {
                 password: password
             })
         })
-        .then(response => {
-            console.log(response);
-            loginUserSuccess(dispatch, null);
+        .then(ApiUtils.checkStatus)
+        .then(response => response.json())
+        .then(responseJson => {
+            loginUserSuccess(dispatch, responseJson['token']);
         })
-        .catch((error) => {
+        .catch(error => {
             console.log(error);
             loginUserFail(dispatch);
         });
@@ -93,10 +98,10 @@ const loginUserFail = (dispatch) => {
     dispatch({ type: LOGIN_USER_FAIL });
 };
 
-const loginUserSuccess = (dispatch, user) => {
+const loginUserSuccess = (dispatch, auth_token) => {
     dispatch({
         type: LOGIN_USER_SUCCESS,
-        payload: user
+        payload: auth_token
     });
 };
 
