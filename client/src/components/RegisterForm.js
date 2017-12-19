@@ -2,7 +2,14 @@ import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
-import { emailChanged, passwordChanged, password2Changed, registerUser, clearAuthErrors } from '../actions';
+import {
+    emailChanged,
+    usernameChanged,
+    passwordChanged,
+    password2Changed,
+    registerUser,
+    clearAuthErrors
+} from '../actions';
 import { Card, CardSection, Input, Button, Spinner } from './common';
 
 class RegisterForm extends Component {
@@ -13,6 +20,10 @@ class RegisterForm extends Component {
 
     onEmailChange(text) {
         this.props.emailChanged(text);
+    }
+
+    onUsernameChange(text) {
+        this.props.usernameChanged(text);
     }
 
     onPasswordChange(text) {
@@ -28,9 +39,9 @@ class RegisterForm extends Component {
     }
 
     onRegisterButtonPress() {
-        const { email, password, password2 } = this.props;
+        const { email, username, password, password2 } = this.props;
 
-        this.props.registerUser({email, password, password2 });
+        this.props.registerUser({email, username, password, password2 });
     }
 
     renderButton() {
@@ -64,6 +75,14 @@ class RegisterForm extends Component {
                         placeholder='email@email.com'
                         onChangeText={this.onEmailChange.bind(this)}
                         value={this.props.email} />
+                </CardSection>
+
+                <CardSection>
+                    <Input
+                        label='Username'
+                        placeholder='user123'
+                        onChangeText={this.onUsernameChange.bind(this)}
+                        value={this.props.username} />
                 </CardSection>
 
                 <CardSection>
@@ -121,11 +140,11 @@ const styles={
 
 const mapStateToProps = state => {
 
-    const { email, password, password2, error, loading } = state.auth;
+    const { email, username, password, password2, error, loading } = state.auth;
 
-    return { email, password, password2, error, loading };
+    return { email, username, password, password2, error, loading };
 };
 
 export default connect(mapStateToProps, {
-    emailChanged, passwordChanged, password2Changed, registerUser, clearAuthErrors
+    emailChanged, usernameChanged, passwordChanged, password2Changed, registerUser, clearAuthErrors
 })(RegisterForm);

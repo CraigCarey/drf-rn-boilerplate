@@ -1,5 +1,6 @@
 import {
     EMAIL_CHANGED,
+    USERNAME_CHANGED,
     PASSWORD_CHANGED,
     PASSWORD2_CHANGED,
     LOGIN_USER_START,
@@ -18,6 +19,13 @@ const ServerAddress = "http://localhost:8080";
 export const emailChanged = (text) => {
     return {
         type: EMAIL_CHANGED,
+        payload: text
+    }
+};
+
+export const usernameChanged = (text) => {
+    return {
+        type: USERNAME_CHANGED,
         payload: text
     }
 };
@@ -66,7 +74,7 @@ export const loginUser = ({ email, password }) => {
     };
 };
 
-export const registerUser = ({ email, password, password2 }) => {
+export const registerUser = ({ email, username, password, password2 }) => {
 
     return (dispatch) => {
 
@@ -77,13 +85,27 @@ export const registerUser = ({ email, password, password2 }) => {
 
             dispatch({type: LOGIN_USER_START});
 
-            // TODO
-            // firebase.auth().createUserWithEmailAndPassword(email, password)
-            //     .then(user => registerUserSuccess(dispatch, user))
-            //     .catch((error) => {
-            //         console.log(error);
-            //         registerUserFail(dispatch);
-            //     });
+            fetch(`${ServerAddress}/api/auth/profile/`, {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: email,
+                    name: username,
+                    password: password,
+                    password2: password2
+                })
+            })
+            .then(ApiUtils.checkStatus)
+            .then(registerUserSuccess(dispatch))
+            .catch(error => {
+                // TODO: why is this _55?
+                // TODO: Handle errors properly
+                console.log(error['_55']);
+                registerUserFail(dispatch);
+            });
         }
     }
 };
@@ -106,7 +128,9 @@ const loginUserSuccess = (dispatch, auth_token) => {
 };
 
 const registerUserFail = (dispatch) => {
-    dispatch({ type: REGISTER_USER_FAIL });
+    dispatch({
+        type: REGISTER_USER_FAIL
+    });
 };
 
 const registerUserSuccess = (dispatch, user) => {

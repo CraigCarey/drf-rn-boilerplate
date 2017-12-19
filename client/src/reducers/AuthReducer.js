@@ -1,5 +1,6 @@
 import {
     EMAIL_CHANGED,
+    USERNAME_CHANGED,
     PASSWORD_CHANGED,
     PASSWORD2_CHANGED,
     LOGIN_USER_START,
@@ -14,6 +15,7 @@ import {
 
 const INITIAL_STATE = {
     email: '',
+    username: '',
     password: '',
     password2: '',
     auth_token: null,
@@ -27,6 +29,8 @@ export default (state = INITIAL_STATE, action) => {
         case EMAIL_CHANGED:
             // make a new object from the existing state and overwrite email field
             return { ...state, email: action.payload };
+        case USERNAME_CHANGED:
+            return { ...state, username: action.payload };
         case PASSWORD_CHANGED:
             return { ...state, password: action.payload };
         case PASSWORD2_CHANGED:
