@@ -8,11 +8,12 @@ import {
     LOGIN_USER_FAIL,
     REGISTER_USER_SUCCESS,
     REGISTER_USER_FAIL,
+    EMAIL_INVALID,
+    USERNAME_INVALID,
+    PASSWORD_INVALID,
     PASSWORD_MISMATCH,
     CLEAR_AUTH_ERRORS
 } from './types';
-
-import ApiUtils from './ApiUtils'
 
 const ServerAddress = "http://localhost:8080";
 
@@ -49,9 +50,20 @@ export const password2Changed = (text) => {
 export const loginUser = ({ email, password }) => {
 
     return (dispatch) => {
+
         dispatch({ type: LOGIN_USER_START });
 
-        fetch(`${ServerAddress}/api/auth/login/`, {
+        if (email.length < 3) {
+            dispatch({ type: EMAIL_INVALID });
+            return;
+        }
+
+        if (password.length < 8) {
+            dispatch({ type: PASSWORD_INVALID });
+            return;
+        }
+
+        return fetch(`${ServerAddress}/api/auth/login/`, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -62,14 +74,23 @@ export const loginUser = ({ email, password }) => {
                 password: password
             })
         })
-        .then(ApiUtils.checkStatus)
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw response;
+            }
+            return response.json();
+        })
         .then(responseJson => {
+            console.log("SUCCESS!");
             loginUserSuccess(dispatch, responseJson['token']);
         })
         .catch(error => {
-            console.log(error);
-            loginUserFail(dispatch);
+            console.log("ERROR!");
+            error.json()
+            .then(errorJson => {
+                console.log(errorJson);
+                loginUserFail(dispatch);
+            })
         });
     };
 };
@@ -78,35 +99,59 @@ export const registerUser = ({ email, username, password, password2 }) => {
 
     return (dispatch) => {
 
+        dispatch({ type: LOGIN_USER_START });
+
+        if (email.length < 3) {
+            dispatch({ type: EMAIL_INVALID });
+            return;
+        }
+
+        if (username.length === 0) {
+            dispatch({ type: USERNAME_INVALID });
+            return;
+        }
+
+        if (password.length < 8) {
+            dispatch({ type: PASSWORD_INVALID });
+            return;
+        }
+
         if (password !== password2) {
-            dispatch({type: PASSWORD_MISMATCH});
+            dispatch({ type: PASSWORD_MISMATCH });
+            return;
         }
-        else {
 
-            dispatch({type: LOGIN_USER_START});
-
-            fetch(`${ServerAddress}/api/auth/profile/`, {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    email: email,
-                    name: username,
-                    password: password,
-                    password2: password2
-                })
+        return fetch(`${ServerAddress}/api/auth/profile/`, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: email,
+                name: username,
+                password: password,
+                password2: password2
             })
-            .then(ApiUtils.checkStatus)
-            .then(registerUserSuccess(dispatch))
-            .catch(error => {
-                // TODO: why is this _55?
-                // TODO: Handle errors properly
-                console.log(error['_55']);
-                registerUserFail(dispatch);
-            });
-        }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw response;
+            }
+            return
+        })
+        .then(() => {
+            console.log("SUCCESS!");
+            registerUserSuccess(dispatch);
+        })
+        .catch(error => {
+            console.log("ERROR!");
+            error.json()
+            .then(errorJson => {
+                console.log(errorJson);
+                registerUserFail(dispatch, errorJson);
+            })
+        });
     }
 };
 
@@ -117,25 +162,54 @@ export const clearAuthErrors = () => {
 };
 
 const loginUserFail = (dispatch) => {
-    dispatch({ type: LOGIN_USER_FAIL });
+
+    let error_message = 'Authentication Failed';
+
+    dispatch({
+        type: LOGIN_USER_FAIL,
+        payload: error_message
+    });
 };
 
 const loginUserSuccess = (dispatch, auth_token) => {
+    console.log(`loginUserSuccess. auth token: ${auth_token}`);
     dispatch({
         type: LOGIN_USER_SUCCESS,
         payload: auth_token
     });
 };
 
-const registerUserFail = (dispatch) => {
+const registerUserFail = (dispatch, error) => {
+
+    let error_message = 'Registration Failed';
+
+    console.log(`registerUserFail: ${error}`);
+
+    if (error.hasOwnProperty('email'))
+    {
+        error_message = error['email'];
+    }
+    else if (error.hasOwnProperty('name'))
+    {
+        error_message = error['name'];
+    }
+    else if (error.hasOwnProperty('password'))
+    {
+        error_message = error['password'];
+    }
+    else if (error.hasOwnProperty('non_field_errors'))
+    {
+        error_message = error['non_field_errors'];
+    }
+
     dispatch({
-        type: REGISTER_USER_FAIL
+        type: REGISTER_USER_FAIL,
+        payload: error_message
     });
 };
 
-const registerUserSuccess = (dispatch, user) => {
+const registerUserSuccess = (dispatch) => {
     dispatch({
-        type: REGISTER_USER_SUCCESS,
-        payload: user
+        type: REGISTER_USER_SUCCESS
     });
 };
