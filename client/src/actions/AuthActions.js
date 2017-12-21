@@ -1,3 +1,5 @@
+import { Actions } from 'react-native-router-flux';
+
 import {
     EMAIL_CHANGED,
     USERNAME_CHANGED,
@@ -6,6 +8,7 @@ import {
     LOGIN_USER_START,
     LOGIN_USER_SUCCESS,
     LOGIN_USER_FAIL,
+    LOGOUT_USER,
     REGISTER_USER_SUCCESS,
     REGISTER_USER_FAIL,
     EMAIL_INVALID,
@@ -95,6 +98,17 @@ export const loginUser = ({ email, password }) => {
     };
 };
 
+export const logoutUser = () => {
+
+    console.log("Logging out!");
+
+    Actions.login({ type: 'replace' });
+
+    return {
+        type: LOGOUT_USER
+    }
+};
+
 export const registerUser = ({ email, username, password, password2 }) => {
 
     return (dispatch) => {
@@ -177,6 +191,8 @@ const loginUserSuccess = (dispatch, auth_token) => {
         type: LOGIN_USER_SUCCESS,
         payload: auth_token
     });
+
+    Actions.main({ type: 'replace' });
 };
 
 const registerUserFail = (dispatch, error) => {
