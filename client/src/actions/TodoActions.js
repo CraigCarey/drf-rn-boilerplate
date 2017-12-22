@@ -1,3 +1,4 @@
+import { AsyncStorage } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import {
     TODO_UPDATE,
@@ -17,16 +18,39 @@ export const todoUpdate = ({ prop, value }) => {
 };
 
 export const todoCreate = ({ name, done }) => {
-    // const { currentUser } = firebase.auth();
 
-    // return a 'pretend' function to satisfy redux-thunk
     return (dispatch) => {
-        // firebase.database().ref(`/users/${currentUser.uid}/todos`)
-        //     .push({ name, phone, shift})
-        //     .then(() => {
-        //         dispatch({ type: TODO_CREATE });
-        //         Actions.pop();
-        //     });
+        AsyncStorage.getItem('@AuthStore:token')
+            .then(auth_token => {
+
+                return fetch(`${ServerAddress}/api/todos/`, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Token ' + auth_token
+                    },
+                    body: JSON.stringify({
+                        name: name,
+                        done: done
+                    })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw response;
+                    }
+                    return;
+                })
+                .then(() => {
+                    dispatch({ type: TODO_CREATE });
+                    Actions.main({ type: 'replace' });
+                })
+                .catch(error => {
+                    console.log(error);
+                    dispatch({ type: TODO_CREATE });
+                    Actions.main({ type: 'replace' });
+                })
+            });
     }
 };
 
