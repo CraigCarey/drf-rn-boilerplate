@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 import { Actions } from 'react-native-router-flux';
+import { connect } from 'react-redux';
 
 class LoadingScreen extends Component {
 
     componentWillMount() {
 
+        // TODO: persist
+        console.log(this.props.auth_token);
         Actions.login({ type: 'replace' });
 
         // TODO
@@ -42,4 +45,11 @@ const styles = {
     }
 };
 
-export default LoadingScreen;
+const mapStateToProps = state => {
+
+    const { auth_token } = state.auth;
+
+    return { auth_token };
+};
+
+export default connect(mapStateToProps, {})(LoadingScreen);

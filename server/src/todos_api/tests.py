@@ -21,7 +21,7 @@ class TodosApiTests(TestCase):
             password=self.password)
         self.todo1 = TodoItem.objects.create(
             owner=self.user1,
-            todo_text="Test todo 1"
+            name="Test todo 1"
         )
 
     def tearDown(self):
@@ -32,7 +32,7 @@ class TodosApiTests(TestCase):
         Can't create todo unless logged in
         """
         test_data = {
-            'todo_text': "Test todo"
+            'name': "Test todo"
         }
         request = self.factory.post('', test_data, format='json')
         todo_post_view = TodoViewSet.as_view({'post': 'create'})
@@ -44,7 +44,7 @@ class TodosApiTests(TestCase):
         Registered user can create new todo
         """
         test_data = {
-            'todo_text': "Test todo"
+            'name': "Test todo"
         }
         request = self.factory.post('', test_data, format='json')
         force_authenticate(request, user=self.user1)
@@ -52,7 +52,7 @@ class TodosApiTests(TestCase):
         response = todo_post_view(request)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         new_todo = TodoItem.objects.get(pk=response.data['id'])
-        self.assertEquals(new_todo.todo_text, response.data['todo_text'])
+        self.assertEquals(new_todo.name, response.data['name'])
         self.assertEquals(new_todo.owner.pk, self.user1.pk)
 
     def test_create_empty_todo(self):
@@ -72,7 +72,7 @@ class TodosApiTests(TestCase):
         Creation of a todo with no data fails
         """
         test_data = {
-            'todo_text': ""
+            'name': ""
         }
         request = self.factory.post('', test_data, format='json')
         force_authenticate(request, user=self.user1)
@@ -85,7 +85,7 @@ class TodosApiTests(TestCase):
         Only the owner of a todo can update it
         """
         test_data = {
-            'todo_text': "New test todo text PUT"
+            'name': "New test todo text PUT"
         }
         request = self.factory.put('', test_data)
         todo_put_view = TodoViewSet.as_view({'put': 'update'})
@@ -97,14 +97,14 @@ class TodosApiTests(TestCase):
         response = todo_put_view(request, pk=self.todo1.pk)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.todo1 = TodoItem.objects.get(pk=self.todo1.pk)
-        self.assertEqual(self.todo1.todo_text, test_data['todo_text'])
+        self.assertEqual(self.todo1.name, test_data['name'])
 
     def test_owner_patch_todo(self):
         """
         Only the owner of a todo can partially update it
         """
         test_data = {
-            'todo_text': "New test todo text PATCH"
+            'name': "New test todo text PATCH"
         }
         request = self.factory.patch('', test_data)
         todo_patch_view = TodoViewSet.as_view({'patch': 'partial_update'})
@@ -116,7 +116,7 @@ class TodosApiTests(TestCase):
         response = todo_patch_view(request, pk=self.todo1.pk)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.todo1 = TodoItem.objects.get(pk=self.todo1.pk)
-        self.assertEqual(self.todo1.todo_text, test_data['todo_text'])
+        self.assertEqual(self.todo1.name, test_data['name'])
 
     def test_owner_delete_todo(self):
         """
@@ -140,4 +140,4 @@ class TodosApiTests(TestCase):
         todo_get_view = TodoViewSet.as_view({'get': 'retrieve'})
         response = todo_get_view(request, pk=self.todo1.pk)
         self.assertEquals(response.status_code, status.HTTP_200_OK)
-        self.assertEquals(response.data['todo_text'], self.todo1.todo_text)
+        self.assertEquals(response.data['name'], self.todo1.name)

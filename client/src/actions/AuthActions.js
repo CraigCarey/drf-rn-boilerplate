@@ -18,7 +18,7 @@ import {
     CLEAR_AUTH_ERRORS
 } from './types';
 
-const ServerAddress = "http://localhost:8080";
+const ServerAddress = "http://localhost:8080"; // TODO: DRY
 
 export const emailChanged = (text) => {
     return {

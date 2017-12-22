@@ -10,5 +10,5 @@ class TodoItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.TodoItem
-        fields = ('id', 'owner', 'todo_text', 'done', 'created_on')
+        fields = ('id', 'owner', 'name', 'done', 'created_on')
         extra_kwargs = {'owner': {'read_only': True}}

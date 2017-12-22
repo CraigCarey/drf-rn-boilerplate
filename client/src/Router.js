@@ -4,6 +4,8 @@ import LoginForm from './components/LoginForm';
 import LoadingScreen from './components/LoadingScreen'
 import RegisterForm from './components/RegisterForm';
 import TodoList from './components/TodoList';
+import TodoEdit from './components/TodoEdit';
+import TodoCreate from './components/TodoCreate';
 import { logoutUser } from './actions';
 
 
@@ -29,8 +31,8 @@ const RouterComponent = () => {
                         title='Todos'
                         initial
                     />
-                    {/*<Scene key='todoCreate' component={TodoCreate} title='Create Todo' />*/}
-                    {/*<Scene key='todoEdit' component={TodoEdit} title='Edit Todo' />*/}
+                    <Scene key='todoEdit' component={TodoEdit} title='Edit Todo' />
+                    <Scene key='todoCreate' component={TodoCreate} title='Create Todo' />
                 </Scene>
 
             </Scene>

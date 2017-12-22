@@ -7,6 +7,8 @@ import {
     TODO_CLEAR
 } from './types';
 
+const ServerAddress = "http://localhost:8080"; // TODO: DRY
+
 export const todoUpdate = ({ prop, value }) => {
     return {
         type: TODO_UPDATE,
@@ -30,14 +32,31 @@ export const todoCreate = ({ name, done }) => {
 
 export const todosFetch = () => {
 
-    // const { currentUser } = firebase.auth();
-
     return (dispatch) => {
-        // this watcher exists for the entire lifecycle of the application
-        // firebase.database().ref(`/users/${currentUser.uid}/todos`)
-        //     .on('value', snapshot => {
-        //         dispatch({ type: TODOS_FETCH_SUCCESS, payload: snapshot.val() })
-        //     });
+        return fetch(`${ServerAddress}/api/todos/`, {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw response;
+            }
+            return response.json();
+        })
+        .then(responseJson => {
+            console.log("SUCCESS!");
+            dispatch({ type: TODOS_FETCH_SUCCESS, payload: responseJson })
+        })
+        .catch(error => {
+            console.log("ERROR!");
+            error.json()
+                .then(errorJson => {
+                    console.log(errorJson);
+                })
+        });
     }
 };
 
