@@ -1,3 +1,4 @@
+import { AsyncStorage } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 
 import {
@@ -98,11 +99,22 @@ export const loginUser = ({ email, password }) => {
     };
 };
 
+export const loginWithStoredToken = ({auth_token}) => {
+    console.log(`loginWithStoredToken: ${auth_token}`);
+
+    return {
+        type: LOGIN_USER_SUCCESS,
+        payload: auth_token
+    };
+};
+
 export const logoutUser = () => {
 
-    console.log("Logging out!");
+    console.log("logoutUser");
 
     Actions.login({ type: 'replace' });
+
+    AsyncStorage.removeItem('@AuthStore:token');
 
     return {
         type: LOGOUT_USER
@@ -191,6 +203,8 @@ const loginUserSuccess = (dispatch, auth_token) => {
         type: LOGIN_USER_SUCCESS,
         payload: auth_token
     });
+
+    AsyncStorage.setItem('@AuthStore:token', auth_token);
 
     Actions.main({ type: 'replace' });
 };

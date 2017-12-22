@@ -1,32 +1,35 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, AsyncStorage } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
+import { loginWithStoredToken } from '../actions';
+
 
 class LoadingScreen extends Component {
 
     componentWillMount() {
 
-        // TODO: persist
-        console.log(this.props.auth_token);
-        Actions.login({ type: 'replace' });
+        AsyncStorage.getItem('@AuthStore:token')
+            .then(auth_token => {
+                // TODO: verify token still valid?
+                if (!auth_token) {
+                    throw Error();
+                }
 
-        // TODO
-        // firebase.auth().onAuthStateChanged((user) => {
-        //     if (user) {
-        //         Actions.main({ type: 'replace' });
-        //     }
-        //     else {
-        //         Actions.login({ type: 'replace' });
-        //     }
-        // });
+                this.props.loginWithStoredToken({auth_token});
+
+                Actions.main({ type: 'replace' });
+            })
+            .catch(() => {
+                Actions.login({ type: 'replace' });
+            });
     }
 
     render() {
         return (
             <View style={styles.splashContainerStyle}>
                 <Text style={styles.splashTextStyle}>
-                    Manager
+                    Todos
                 </Text>
             </View>
         );
@@ -45,11 +48,4 @@ const styles = {
     }
 };
 
-const mapStateToProps = state => {
-
-    const { auth_token } = state.auth;
-
-    return { auth_token };
-};
-
-export default connect(mapStateToProps, {})(LoadingScreen);
+export default connect(null, { loginWithStoredToken })(LoadingScreen);

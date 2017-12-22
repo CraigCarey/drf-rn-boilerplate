@@ -47,11 +47,9 @@ export const todosFetch = () => {
             return response.json();
         })
         .then(responseJson => {
-            console.log("SUCCESS!");
             dispatch({ type: TODOS_FETCH_SUCCESS, payload: responseJson })
         })
         .catch(error => {
-            console.log("ERROR!");
             error.json()
                 .then(errorJson => {
                     console.log(errorJson);
