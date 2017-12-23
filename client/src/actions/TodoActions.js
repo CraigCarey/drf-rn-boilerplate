@@ -99,15 +99,36 @@ export const todoClear = () => {
     return ({ type: TODO_CLEAR });
 };
 
-export const todoDelete = ({ uid }) => {
-    // const { currentUser } = firebase.auth();
+export const todoDelete = ({ id }) => {
 
     return (dispatch) => {
-        // firebase.database().ref(`/users/${currentUser.uid}/todos/${uid}`)
-        //     .remove()
-        //     .then(() => {
-        //         dispatch({ type: TODO_CLEAR });
-        //         Actions.pop();
-        //     });
+        AsyncStorage.getItem('@AuthStore:token')
+        .then(auth_token => {
+
+            return fetch(`${ServerAddress}/api/todos/${id}/`, {
+                method: 'DELETE',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Token ' + auth_token
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw response;
+                }
+                return;
+            })
+            .then(() => {
+                dispatch({ type: TODO_CLEAR });
+                Actions.main({ type: 'replace' });
+            })
+            .catch(error => {
+                console.log(error);
+                // TODO: display error modal
+                dispatch({ type: TODO_CLEAR });
+                Actions.main({ type: 'replace' });
+            })
+        });
     }
 };

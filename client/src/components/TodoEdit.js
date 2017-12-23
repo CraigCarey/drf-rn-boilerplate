@@ -24,12 +24,14 @@ class TodoEdit extends Component {
     onSavePress() {
         const { name, done } = this.props;
 
-        this.props.todoSave({ name, done, uid: this.props.todo.uid });
+        this.props.todoSave({ name: name, done: done, id: this.props.todo.id });
     }
 
     onAccept() {
-        const { uid } = this.props.todo;
-        this.props.todoDelete({ uid })
+        this.setState({ showModal: false });
+        const { id } = this.props.todo;
+        console.log(`Deleting: ${id}`);
+        this.props.todoDelete({ id });
     }
 
     onDecline() {
