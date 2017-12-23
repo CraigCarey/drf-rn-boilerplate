@@ -8,6 +8,7 @@ import ListItem from './ListItem';
 class TodoList extends Component {
 
     componentWillMount() {
+        // TODO: display error modal on fail
         this.props.todosFetch();
 
         this.createDataSource(this.props);

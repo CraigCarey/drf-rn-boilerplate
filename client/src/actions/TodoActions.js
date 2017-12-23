@@ -82,16 +82,40 @@ export const todosFetch = () => {
     }
 };
 
-export const todoSave = ({ name, done, uid }) => {
-    // const { currentUser } = firebase.auth();
+export const todoSave = ({ name, done, id }) => {
 
     return (dispatch) => {
-        // firebase.database().ref(`/users/${currentUser.uid}/todos/${uid}`)
-        //     .set({ name, phone, shift })
-        //     .then(() => {
-        //         dispatch({ type: TODO_SAVE_SUCCESS });
-        //         Actions.pop();
-        //     });
+        AsyncStorage.getItem('@AuthStore:token')
+            .then(auth_token => {
+                return fetch(`${ServerAddress}/api/todos/${id}/`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Token ' + auth_token
+                    },
+                    body: JSON.stringify({
+                        name: name,
+                        done: done
+                    })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw response;
+                    }
+                    return response.json();
+                })
+                .then(() => {
+                    dispatch({ type: TODO_SAVE_SUCCESS });
+                    Actions.main({ type: 'replace' });
+                })
+                .catch(error => {
+                        console.log(error);
+                        // TODO: display error modal
+                        dispatch({ type: TODO_CLEAR });
+                        Actions.main({ type: 'replace' });
+                });
+            });
     }
 };
 
@@ -103,15 +127,14 @@ export const todoDelete = ({ id }) => {
 
     return (dispatch) => {
         AsyncStorage.getItem('@AuthStore:token')
-        .then(auth_token => {
-
-            return fetch(`${ServerAddress}/api/todos/${id}/`, {
-                method: 'DELETE',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Token ' + auth_token
-                }
+            .then(auth_token => {
+                return fetch(`${ServerAddress}/api/todos/${id}/`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Token ' + auth_token
+                    }
             })
             .then(response => {
                 if (!response.ok) {
