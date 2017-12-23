@@ -81,6 +81,6 @@ $ react-native run-ios
     * HTTPS
     * Upgrade to Django 2.0
 * Client
-    * login after registration
     * login with username OR email
     * Nav menu
+    * JWT

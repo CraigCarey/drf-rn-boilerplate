@@ -1,5 +1,7 @@
 import { AsyncStorage } from 'react-native';
 import { Actions } from 'react-native-router-flux';
+import { ServerAddress } from './ApiUtils';
+
 import {
     TODO_UPDATE,
     TODO_CREATE,
@@ -7,8 +9,6 @@ import {
     TODO_SAVE_SUCCESS,
     TODO_CLEAR
 } from './types';
-
-const ServerAddress = "http://localhost:8080"; // TODO: DRY
 
 export const todoUpdate = ({ prop, value }) => {
     return {
@@ -113,10 +113,10 @@ export const todoSave = ({ name, done, id }) => {
                     Actions.main({ type: 'replace' });
                 })
                 .catch(error => {
-                        console.log(error);
-                        // TODO: display error modal
-                        dispatch({ type: TODO_CLEAR });
-                        Actions.main({ type: 'replace' });
+                    console.log(error);
+                    // TODO: display error modal
+                    dispatch({ type: TODO_CLEAR });
+                    Actions.main({ type: 'replace' });
                 });
             });
     }

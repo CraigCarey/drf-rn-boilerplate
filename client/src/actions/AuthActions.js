@@ -1,5 +1,6 @@
 import { AsyncStorage } from 'react-native';
 import { Actions } from 'react-native-router-flux';
+import { ServerAddress } from './ApiUtils';
 
 import {
     EMAIL_CHANGED,
@@ -18,8 +19,6 @@ import {
     PASSWORD_MISMATCH,
     CLEAR_AUTH_ERRORS
 } from './types';
-
-const ServerAddress = "http://localhost:8080"; // TODO: DRY
 
 export const emailChanged = (text) => {
     return {
@@ -234,7 +233,7 @@ const registerUserFail = (dispatch, error) => {
 };
 
 const registerUserSuccess = (dispatch) => {
-    // TODO: automatically log user in
+
     dispatch({
         type: REGISTER_USER_SUCCESS
     });
