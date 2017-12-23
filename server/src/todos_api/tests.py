@@ -136,8 +136,15 @@ class TodosApiTests(TestCase):
             TodoItem.objects.get(pk=self.todo1.pk)
 
     def test_get(self):
+        """
+        Only the owner of a todo can view it
+        """
         request = self.factory.get('')
         todo_get_view = TodoViewSet.as_view({'get': 'retrieve'})
         response = todo_get_view(request, pk=self.todo1.pk)
-        self.assertEquals(response.status_code, status.HTTP_200_OK)
+        self.assertEquals(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+        force_authenticate(request, user=self.user1)
+        response = todo_get_view(request, pk=self.todo1.pk)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEquals(response.data['name'], self.todo1.name)

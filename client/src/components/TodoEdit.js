@@ -30,7 +30,6 @@ class TodoEdit extends Component {
     onAccept() {
         this.setState({ showModal: false });
         const { id } = this.props.todo;
-        console.log(`Deleting: ${id}`);
         this.props.todoDelete({ id });
     }
 

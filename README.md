@@ -76,9 +76,11 @@ $ react-native run-ios
 
 ## TODO
 * Server
-    * Upgrade to Django 2.0
+    * Done checkbox
     * Password reset
-    * PostgreSQL
     * HTTPS
+    * Upgrade to Django 2.0
 * Client
+    * login after registration
+    * login with username OR email
     * Nav menu

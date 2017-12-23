@@ -16,7 +16,6 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     """
     serializer_class = serializers.UserProfileSerializer
     queryset = models.UserProfile.objects.all()
-    authentication_classes = (TokenAuthentication,)
     http_method_names = ['post']
 
 

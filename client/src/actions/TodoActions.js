@@ -22,13 +22,12 @@ export const todoCreate = ({ name, done }) => {
     return (dispatch) => {
         AsyncStorage.getItem('@AuthStore:token')
             .then(auth_token => {
-
                 return fetch(`${ServerAddress}/api/todos/`, {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
-                        'Authorization': 'Token ' + auth_token
+                        'Authorization': `Token ${auth_token}`
                     },
                     body: JSON.stringify({
                         name: name,
@@ -57,27 +56,31 @@ export const todoCreate = ({ name, done }) => {
 export const todosFetch = () => {
 
     return (dispatch) => {
-        return fetch(`${ServerAddress}/api/todos/`, {
-            method: 'GET',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            }
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw response;
-            }
-            return response.json();
-        })
-        .then(responseJson => {
-            dispatch({ type: TODOS_FETCH_SUCCESS, payload: responseJson })
-        })
-        .catch(error => {
-            error.json()
-                .then(errorJson => {
-                    console.log(errorJson);
+        AsyncStorage.getItem('@AuthStore:token')
+            .then(auth_token => {
+                return fetch(`${ServerAddress}/api/todos/`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': `Token ${auth_token}`
+                    }
                 })
+                .then(response => {
+                    if (!response.ok) {
+                        throw response;
+                    }
+                    return response.json();
+                })
+                .then(responseJson => {
+                    dispatch({ type: TODOS_FETCH_SUCCESS, payload: responseJson })
+                })
+                .catch(error => {
+                    error.json()
+                        .then(errorJson => {
+                            console.log(errorJson);
+                        })
+                });
         });
     }
 };
@@ -92,7 +95,7 @@ export const todoSave = ({ name, done, id }) => {
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
-                        'Authorization': 'Token ' + auth_token
+                        'Authorization': `Token ${auth_token}`
                     },
                     body: JSON.stringify({
                         name: name,
@@ -133,25 +136,25 @@ export const todoDelete = ({ id }) => {
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
-                        'Authorization': 'Token ' + auth_token
+                        'Authorization': `Token ${auth_token}`
                     }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw response;
-                }
-                return;
-            })
-            .then(() => {
-                dispatch({ type: TODO_CLEAR });
-                Actions.main({ type: 'replace' });
-            })
-            .catch(error => {
-                console.log(error);
-                // TODO: display error modal
-                dispatch({ type: TODO_CLEAR });
-                Actions.main({ type: 'replace' });
-            })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw response;
+                    }
+                    return;
+                })
+                .then(() => {
+                    dispatch({ type: TODO_CLEAR });
+                    Actions.main({ type: 'replace' });
+                })
+                .catch(error => {
+                    console.log(error);
+                    // TODO: display error modal
+                    dispatch({ type: TODO_CLEAR });
+                    Actions.main({ type: 'replace' });
+                })
         });
     }
 };

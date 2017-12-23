@@ -70,7 +70,7 @@ export const loginUser = ({ email, password }) => {
         return fetch(`${ServerAddress}/api/auth/login/`, {
             method: 'POST',
             headers: {
-                Accept: 'application/json',
+                'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
@@ -85,11 +85,9 @@ export const loginUser = ({ email, password }) => {
             return response.json();
         })
         .then(responseJson => {
-            console.log("SUCCESS!");
             loginUserSuccess(dispatch, responseJson['token']);
         })
         .catch(error => {
-            console.log("ERROR!");
             error.json()
             .then(errorJson => {
                 console.log(errorJson);
@@ -100,7 +98,6 @@ export const loginUser = ({ email, password }) => {
 };
 
 export const loginWithStoredToken = ({auth_token}) => {
-    console.log(`loginWithStoredToken: ${auth_token}`);
 
     return {
         type: LOGIN_USER_SUCCESS,
@@ -150,7 +147,7 @@ export const registerUser = ({ email, username, password, password2 }) => {
         return fetch(`${ServerAddress}/api/auth/profile/`, {
             method: 'POST',
             headers: {
-                Accept: 'application/json',
+                'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
@@ -239,6 +236,7 @@ const registerUserFail = (dispatch, error) => {
 };
 
 const registerUserSuccess = (dispatch) => {
+    // TODO: automatically log user in
     dispatch({
         type: REGISTER_USER_SUCCESS
     });
