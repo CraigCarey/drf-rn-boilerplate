@@ -146,5 +146,10 @@ const mapStateToProps = state => {
 };
 
 export default connect(mapStateToProps, {
-    emailChanged, usernameChanged, passwordChanged, password2Changed, registerUser, clearAuthErrors
+    emailChanged,
+    usernameChanged,
+    passwordChanged,
+    password2Changed,
+    registerUser,
+    clearAuthErrors
 })(RegisterForm);

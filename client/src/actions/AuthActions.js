@@ -164,11 +164,9 @@ export const registerUser = ({ email, username, password, password2 }) => {
             return
         })
         .then(() => {
-            console.log("SUCCESS!");
             registerUserSuccess(dispatch);
         })
         .catch(error => {
-            console.log("ERROR!");
             error.json()
             .then(errorJson => {
                 console.log(errorJson);
@@ -240,4 +238,6 @@ const registerUserSuccess = (dispatch) => {
     dispatch({
         type: REGISTER_USER_SUCCESS
     });
+
+    Actions.login({ type: 'replace' });
 };

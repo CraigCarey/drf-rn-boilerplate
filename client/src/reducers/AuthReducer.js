@@ -50,7 +50,7 @@ export default (state = INITIAL_STATE, action) => {
         case REGISTER_USER_START:
             return { ...state, loading: true, error: '' };
         case REGISTER_USER_SUCCESS:
-            return { ...state, ...INITIAL_STATE, user: action.payload };
+            return { ...state, loading: false, user: action.payload };
         case REGISTER_USER_FAIL:
             return { ...state, error: action.payload, loading: false };
         case EMAIL_INVALID:

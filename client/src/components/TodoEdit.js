@@ -50,7 +50,7 @@ class TodoEdit extends Component {
 
                 <CardSection>
                     <Button onPress={ () => this.setState({ showModal: !this.state.showModal }) }>
-                        Delete Todo
+                        Delete
                     </Button>
                 </CardSection>
 
