@@ -45,7 +45,7 @@ export const todoCreate = ({ name, done }) => {
                     Actions.main({ type: 'replace' });
                 })
                 .catch(error => {
-                    console.log(error);
+                    console.error(error);
                     dispatch({ type: TODO_CREATE });
                     Actions.main({ type: 'replace' });
                 })
@@ -76,7 +76,7 @@ export const todosFetch = () => {
                     dispatch({ type: TODOS_FETCH_SUCCESS, payload: responseJson })
                 })
                 .catch(error => {
-                    console.log(error);
+                    console.error(error);
                 });
         });
     }
@@ -110,7 +110,7 @@ export const todoSave = ({ name, done, id }) => {
                     Actions.main({ type: 'replace' });
                 })
                 .catch(error => {
-                    console.log(error);
+                    console.error(error);
                     // TODO: display error modal
                     dispatch({ type: TODO_CLEAR });
                     Actions.main({ type: 'replace' });
@@ -147,7 +147,7 @@ export const todoDelete = ({ id }) => {
                     Actions.main({ type: 'replace' });
                 })
                 .catch(error => {
-                    console.log(error);
+                    console.error(error);
                     // TODO: display error modal
                     dispatch({ type: TODO_CLEAR });
                     Actions.main({ type: 'replace' });

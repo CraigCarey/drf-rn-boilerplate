@@ -98,8 +98,6 @@ export const loginWithStoredToken = ({auth_token}) => {
 
 export const logoutUser = () => {
 
-    console.log("logoutUser");
-
     Actions.login({ type: 'replace' });
 
     AsyncStorage.removeItem('@AuthStore:token');
@@ -181,7 +179,7 @@ const loginUserFail = (dispatch) => {
 };
 
 const loginUserSuccess = (dispatch, auth_token) => {
-    console.log(`loginUserSuccess. auth token: ${auth_token}`);
+
     dispatch({
         type: LOGIN_USER_SUCCESS,
         payload: auth_token
@@ -195,8 +193,6 @@ const loginUserSuccess = (dispatch, auth_token) => {
 const registerUserFail = (dispatch, error) => {
 
     let error_message = 'Registration Failed';
-
-    console.log(`registerUserFail: ${error}`);
 
     if (error.hasOwnProperty('email'))
     {

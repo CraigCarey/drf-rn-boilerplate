@@ -84,5 +84,6 @@ $ react-native run-ios
     * Password reset
     * HTTPS
 * Client
+    * Error modals
     * Nav menu
     * JWT
