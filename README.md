@@ -40,12 +40,17 @@ $ deactivate
 $ pip install -r requirements.txt
 ```
 
+### Run unit tests
+```
+$ cd src
+$ coverage run --source='.' manage.py test && coverage report
+```
+
 ### Start Django Development Server
 ```
 $ python manage.py makemigrations
 $ python manage.py migrate
 $ python manage.py createsuperuser
-$ python manage.py test
 $ python manage.py runserver 0.0.0.0:8080 # listen on all IP Addresses
 ```
 
