@@ -50,16 +50,11 @@ export const password2Changed = (text) => {
 
 // works asynchronously using redux-thunk
 // manually dispatches an action to the store when call returns
-export const loginUser = ({ email, password }) => {
+export const loginUser = ({ username, password }) => {
 
     return (dispatch) => {
 
         dispatch({ type: LOGIN_USER_START });
-
-        if (email.length < 3) {
-            dispatch({ type: EMAIL_INVALID });
-            return;
-        }
 
         if (password.length < 8) {
             dispatch({ type: PASSWORD_INVALID });
@@ -73,7 +68,7 @@ export const loginUser = ({ email, password }) => {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                username: email,
+                username: username,
                 password: password
             })
         })
@@ -87,11 +82,8 @@ export const loginUser = ({ email, password }) => {
             loginUserSuccess(dispatch, responseJson['token']);
         })
         .catch(error => {
-            error.json()
-            .then(errorJson => {
-                console.log(errorJson);
-                loginUserFail(dispatch);
-            })
+            console.log(error);
+            loginUserFail(dispatch)
         });
     };
 };
@@ -166,11 +158,8 @@ export const registerUser = ({ email, username, password, password2 }) => {
             registerUserSuccess(dispatch);
         })
         .catch(error => {
-            error.json()
-            .then(errorJson => {
-                console.log(errorJson);
-                registerUserFail(dispatch, errorJson);
-            })
+            console.log(error);
+            registerUserFail(dispatch, error);
         });
     }
 };

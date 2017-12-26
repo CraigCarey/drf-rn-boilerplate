@@ -154,12 +154,27 @@ class UserProfileTests(TestCase):
         response = login_post_view(request)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_login_user(self):
+    def test_login_user_email(self):
+        """
+        Login returns a valid Token when email and password are correct
+        """
+        test_data = {
+            'username': self.user1.email,
+            'password': self.password
+        }
+        request = self.factory.post('', test_data, format='json')
+        login_post_view = LoginViewSet.as_view({'post': 'create'})
+        response = login_post_view(request)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        user_token = Token.objects.get(user=self.user1.pk)
+        self.assertEquals(str(user_token), response.data['token'])
+
+    def test_login_user_username(self):
         """
         Login returns a valid Token when username and password are correct
         """
         test_data = {
-            'username': self.user1.email,
+            'username': self.user1.name,
             'password': self.password
         }
         request = self.factory.post('', test_data, format='json')

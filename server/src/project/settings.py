@@ -107,6 +107,11 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': []
 }
 
+AUTHENTICATION_BACKENDS = (
+    'auth_api.backends.EmailOrUsernameModelBackend',
+    'django.contrib.auth.backends.ModelBackend'
+)
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 

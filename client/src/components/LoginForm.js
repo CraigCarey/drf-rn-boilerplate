@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
-import { emailChanged, passwordChanged, loginUser, clearAuthErrors } from '../actions';
+import { usernameChanged, passwordChanged, loginUser, clearAuthErrors } from '../actions';
 import { Card, CardSection, Input, Button, Spinner } from './common';
 
 class LoginForm extends Component {
@@ -11,8 +11,8 @@ class LoginForm extends Component {
         this.props.clearAuthErrors();
     }
 
-    onEmailChange(text) {
-        this.props.emailChanged(text);
+    onUsernameChange(text) {
+        this.props.usernameChanged(text);
     }
 
     onPasswordChange(text) {
@@ -20,9 +20,9 @@ class LoginForm extends Component {
     }
 
     onLoginButtonPress() {
-        const { email, password } = this.props;
+        const { username, password } = this.props;
 
-        this.props.loginUser({email, password});
+        this.props.loginUser({username, password});
     }
 
     renderButton() {
@@ -56,10 +56,10 @@ class LoginForm extends Component {
             <Card>
                 <CardSection>
                     <Input
-                        label='Email'
-                        placeholder='email@email.com'
-                        onChangeText={this.onEmailChange.bind(this)}
-                        value={this.props.email} />
+                        label='Username'
+                        placeholder='username/email'
+                        onChangeText={this.onUsernameChange.bind(this)}
+                        value={this.props.username} />
                 </CardSection>
 
                 <CardSection>
@@ -108,11 +108,14 @@ const styles={
 
 const mapStateToProps = state => {
 
-    const { email, password, error, loading } = state.auth;
+    const { username, password, error, loading } = state.auth;
 
-    return { email, password, error, loading };
+    return { username, password, error, loading };
 };
 
 export default connect(mapStateToProps, {
-    emailChanged, passwordChanged, loginUser, clearAuthErrors
+    usernameChanged,
+    passwordChanged,
+    loginUser,
+    clearAuthErrors
 })(LoginForm);
