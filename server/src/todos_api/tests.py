@@ -17,7 +17,7 @@ class TodosApiTests(TestCase):
         user_profile = get_user_model()
         self.user1 = user_profile.objects.create_user(
             email="test1@test.com",
-            name="test1",
+            username="test1",
             password=self.password)
         self.todo1 = TodoItem.objects.create(
             owner=self.user1,

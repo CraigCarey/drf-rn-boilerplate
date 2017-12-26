@@ -71,18 +71,18 @@ class RegisterForm extends Component {
             <Card>
                 <CardSection>
                     <Input
-                        label='Email'
-                        placeholder='email@email.com'
-                        onChangeText={this.onEmailChange.bind(this)}
-                        value={this.props.email} />
-                </CardSection>
-
-                <CardSection>
-                    <Input
                         label='Username'
                         placeholder='user123'
                         onChangeText={this.onUsernameChange.bind(this)}
                         value={this.props.username} />
+                </CardSection>
+
+                <CardSection>
+                    <Input
+                        label='Email'
+                        placeholder='email@email.com'
+                        onChangeText={this.onEmailChange.bind(this)}
+                        value={this.props.email} />
                 </CardSection>
 
                 <CardSection>

@@ -10,7 +10,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = models.UserProfile
-        fields = ('id', 'email', 'name', 'password')
+        fields = ('id', 'email', 'username', 'password')
         extra_kwargs = {'password': {'write_only': True}}
 
     def validate_password(self, value):
@@ -23,7 +23,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         """
         user = models.UserProfile(
             email=validated_data['email'],
-            name=validated_data['name']
+            username=validated_data['username']
         )
 
         # encrypt the password and store as a hash

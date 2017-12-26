@@ -6,7 +6,7 @@ class EmailOrUsernameModelBackend(object):
         if '@' in username:
             kwargs = {'email': username}
         else:
-            kwargs = {'name': username}
+            kwargs = {'username': username}
         try:
             user = UserProfile.objects.get(**kwargs)
             if user.check_password(password):

@@ -16,7 +16,7 @@ class UserProfileTests(TestCase):
         self.password = "S3cr3tP@55"
         self.user1 = UserProfile.objects.create_user(
             email="test1@test.com",
-            name="test1",
+            username="test1",
             password=self.password)
 
     def tearDown(self):
@@ -49,7 +49,7 @@ class UserProfileTests(TestCase):
         """
         test_data = {
             'email': "test2@test.com",
-            'name': "test2",
+            'username': "test2",
             'password': self.password
         }
         request = self.factory.post('', test_data, format='json')
@@ -58,7 +58,7 @@ class UserProfileTests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         new_user = UserProfile.objects.get(pk=response.data['id'])
         self.assertEquals(new_user.email, test_data['email'])
-        self.assertEquals(new_user.name, test_data['name'])
+        self.assertEquals(new_user.username, test_data['username'])
 
     def test_create_user_no_password(self):
         """
@@ -66,7 +66,7 @@ class UserProfileTests(TestCase):
         """
         test_data = {
             'email': "test3@test.com",
-            'name': "test3"
+            'username': "test3"
         }
         request = self.factory.post('', test_data, format='json')
         user_post_view = UserProfileViewSet.as_view({'post': 'create'})
@@ -79,7 +79,7 @@ class UserProfileTests(TestCase):
         """
         test_data = {
             'email': "test4@test.com",
-            'name': "test4",
+            'username': "test4",
             'password': "123"
         }
         request = self.factory.post('', test_data, format='json')
@@ -93,7 +93,7 @@ class UserProfileTests(TestCase):
         """
         test_data = {
             'email': "test5@test.com",
-            'name': "test5",
+            'username': "test5",
             'password': "password"
         }
         request = self.factory.post('', test_data, format='json')
@@ -106,7 +106,7 @@ class UserProfileTests(TestCase):
         Register user fails when no email provided
         """
         test_data = {
-            'name': "test6",
+            'username': "test6",
             'password': self.password
         }
         request = self.factory.post('', test_data, format='json')
@@ -120,7 +120,7 @@ class UserProfileTests(TestCase):
         """
         test_data = {
             'email': "test7test.com",
-            'name': "test7",
+            'username': "test7",
             'password': self.password
         }
         request = self.factory.post('', test_data, format='json')
@@ -174,7 +174,7 @@ class UserProfileTests(TestCase):
         Login returns a valid Token when username and password are correct
         """
         test_data = {
-            'username': self.user1.name,
+            'username': self.user1.username,
             'password': self.password
         }
         request = self.factory.post('', test_data, format='json')

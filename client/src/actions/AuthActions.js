@@ -143,7 +143,7 @@ export const registerUser = ({ email, username, password, password2 }) => {
             },
             body: JSON.stringify({
                 email: email,
-                name: username,
+                username: username,
                 password: password,
                 password2: password2
             })

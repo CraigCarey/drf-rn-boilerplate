@@ -7,7 +7,7 @@ class UserProfileManager(BaseUserManager):
     """
     Class required by Django for managing our users from the management command
     """
-    def create_user(self, email, name, password=None):
+    def create_user(self, email, username, password=None):
         """
         Creates a new user with the given details
         """
@@ -21,7 +21,7 @@ class UserProfileManager(BaseUserManager):
         # Create a new user object.
         user = self.model(
             email=self.normalize_email(email),
-            name=name
+            username=username
         )
 
         # Create a password hash instead of storing it in clear text
@@ -30,14 +30,14 @@ class UserProfileManager(BaseUserManager):
 
         return user
 
-    def create_superuser(self, email, name, password):
+    def create_superuser(self, email, username, password):
         """
         Creates and saves a new superuser with given details
         """
         # Create a new user with the function we created above
         user = self.create_user(
             email,
-            name,
+            username,
             password
         )
 
@@ -54,29 +54,29 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     A user profile in our system
     """
     email = models.EmailField(max_length=255, unique=True)
-    name = models.CharField(max_length=255, unique=True)
+    username = models.CharField(max_length=255, unique=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 
     objects = UserProfileManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['name']
+    REQUIRED_FIELDS = ['username']
 
     def get_full_name(self):
         """
         Required function so Django knows what to use as the users full name
         """
-        self.name
+        self.username
 
     def get_short_name(self):
         """
         Required function so Django knows what to use as the users short name
         """
-        self.name
+        self.username
 
     def __str__(self):
         """
         What to show when we output an object as a string
         """
-        return self.email
+        return self.username
