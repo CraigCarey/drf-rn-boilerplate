@@ -83,7 +83,6 @@ $ react-native run-ios
 * Server
     * Password reset
     * HTTPS
-    * Upgrade to Django 2.0
 * Client
     * Nav menu
     * JWT
