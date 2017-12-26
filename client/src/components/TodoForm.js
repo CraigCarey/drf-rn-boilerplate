@@ -3,6 +3,8 @@ import { View } from 'react-native';
 import { connect } from 'react-redux';
 import { todoUpdate } from '../actions';
 import { CardSection, Input } from './common';
+import CheckBox from './common/CheckBox';
+
 
 class TodoForm extends Component {
     render() {
@@ -10,7 +12,7 @@ class TodoForm extends Component {
             <View>
                 <CardSection>
                     <Input
-                        label='name'
+                        label='Name'
                         placeholder='Enter todo text here...'
                         value={this.props.name}
                         onChangeText={ value => this.props.todoUpdate({ prop: 'name', value }) }
@@ -18,18 +20,23 @@ class TodoForm extends Component {
                 </CardSection>
 
                 <CardSection>
-                    {/* TODO: 'done' checkbox (material-design?*/}
+                    <CheckBox
+                        label='Done'
+                        isChecked={this.props.done}
+                        color={'green'}
+                        onClick={() => {
+                            this.props.todoUpdate({ prop: 'done', value: !this.props.done });
+                        }} />
                 </CardSection>
-
             </View>
         );
     }
 }
 
 const mapStateToProps = (state) => {
-    const { name } = state.todoForm;
+    const { name, done } = state.todoForm;
 
-    return { name };
+    return { name, done };
 };
 
 export default connect(mapStateToProps, { todoUpdate })(TodoForm);
