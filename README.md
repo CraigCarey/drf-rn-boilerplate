@@ -76,7 +76,6 @@ $ react-native run-ios
 
 ## TODO
 * Server
-    * Done checkbox
     * Password reset
     * HTTPS
     * Upgrade to Django 2.0
