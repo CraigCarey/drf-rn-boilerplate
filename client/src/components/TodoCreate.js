@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { todoUpdate, todoCreate, todoClear } from '../actions';
+import { todoCreate, todoClear } from '../actions';
 import { Card, CardSection, Button } from './common';
 import TodoForm from './TodoForm';
 
@@ -38,7 +38,6 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, {
-    todoUpdate,
     todoCreate,
     todoClear
 })(TodoCreate);
