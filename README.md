@@ -5,54 +5,49 @@ REST API & mobile client with basic auth behaviour
 
 ## Server
 
-### Requirements
+### (Optional) Requirements
 * Vagrant
 * virtualbox
 
-### Setting up Vagrant box (on the host machine):
-```
-$ vagrant init     # creates a config file if one doesn't exist
-$ vagrant up
-$ vagrant ssh
-$ vagrant halt
-$ vagrant destroy
 
+### Configuring and running a Vagrant box (on the host machine):
 ```
-
-Files in the same directory as the Vagrantfile are synced to `/vagrant/`
-
-### Setting up a virtual environment (on the Vagrant box):
-```
-$ mkvirtualenv drf-rn-boilerplate --python=python3
-$ deactivate
-$ workon drf-rn-boilerplate
+$ cd server/
+$ vagrant up                   # creates (if one doesn't already exist), starts and provisions a VM
+$ vagrant ssh                  # connect to the VM
+$ vagrant halt                 # stops the VM
+$ vagrant destroy              # tears down the VM
+$ vagrant reload --provision   # purges and re-initializes the db and restarts the vm
 ```
 
-### Setting up a virtual environment (on your local machine):
-```
-$ python3 -m venv drf-rn-boilerplate
-$ source drf-rn-boilerplate/bin/activate
-$ deactivate
-```
+Files in the same directory as the Vagrantfile are synced to `/vagrant/` on the VM
 
-### Install requirements
+
+### Setting up a virtual environment on your local machine
 ```
+$ python3 -m venv drf-rn-bp-env
+$ source drf-rn-bp-env/bin/activate
 $ pip install -r requirements.txt
+$ deactivate
 ```
+
 
 ### Run unit tests
 ```
-$ cd src
+$ cd server/src/
 $ coverage run --source='.' manage.py test && coverage report
 ```
 
-### Start Django Development Server
+
+### Start Django Development Server on dev machine (starts automatically in VM)
 ```
+$ cd server/src/
 $ python manage.py makemigrations
 $ python manage.py migrate
 $ python manage.py createsuperuser
 $ python manage.py runserver 0.0.0.0:8080 # listen on all IP Addresses
 ```
+
 
 ### API Endpoints
 
@@ -74,10 +69,11 @@ $ python manage.py runserver 0.0.0.0:8080 # listen on all IP Addresses
 $ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 $ brew install node
 $ brew install watchman
-$ cd client
+$ cd client/
 $ npm install
 $ react-native run-ios
 ```
+
 
 ## TODO
 * Server

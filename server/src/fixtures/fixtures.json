@@ -1,0 +1,48 @@
+[
+  {
+    "model": "auth_api.userprofile",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$MfSTJLZ2ePkK$BSUUgSujWDskljiR5BZyHkw0tNUIUH7gfoJTYGU1Xh4=",
+      "last_login": null,
+      "is_superuser": false,
+      "email": "user1@test.com",
+      "username": "user1",
+      "is_active": true,
+      "is_staff": false,
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth_api.userprofile",
+    "pk": 2,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$DyVNL9gsdVPp$hREE4Uxx2sUIb3AjPMcn6IZ6TmC8GGoBM6WjXnK0p1s=",
+      "last_login": null,
+      "is_superuser": false,
+      "email": "user2@test.com",
+      "username": "user2",
+      "is_active": true,
+      "is_staff": false,
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "authtoken.token",
+    "pk": "79ddefccb4b3749aa9e46ab4e1c9000675dbe4fc",
+    "fields": {
+      "user": 1,
+      "created": "2018-04-29T20:46:56.851Z"
+    }
+  },
+  {
+    "model": "authtoken.token",
+    "pk": "e65ef7666bceec6fdf126e240d37671eb22d2458",
+    "fields": {
+      "user": 2,
+      "created": "2018-04-29T20:47:41.210Z"
+    }
+  }
+]
